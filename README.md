@@ -2,7 +2,21 @@
 
 本项目用于验证 Qt 应用的启动解锁流程。应用启动时先锁定界面，用户输入当前麒麟本地账户的系统密码并通过验证后，才能进入主界面。密码由 Linux PAM 校验，应用无需创建或保存自己的密码。
 
-**当前进度**　仓库处于设计阶段，Qt 程序、构建配置和 PAM 服务文件待实现，尚未在目标麒麟机器上实测。下文的 PAM 配置是拟采用的测试样例。
+**当前进度**　已建立 Qt Widgets 和 CMake 工程，运行后显示启动状态窗口。密码验证、界面锁定和 PAM 服务文件待实现，尚未在目标麒麟机器上实测。下文的 PAM 配置是拟采用的测试样例。
+
+## 构建与运行
+
+需要 CMake 3.16 或以上版本、支持 C++17 的编译器和 Qt 5 或 Qt 6 的 Widgets 开发组件。Linux 构建还需要提供 `security/pam_appl.h` 和 `libpam` 的开发包。CMake 配置时会检查这些依赖。[Qt 5 与 Qt 6 的 CMake 用法](https://doc.qt.io/qt-6.5/cmake-qt5-and-qt6-compatibility.html)
+
+在仓库根目录运行以下命令。
+
+```sh
+cmake -S . -B build
+cmake --build build
+./build/qt-kylin-pam-demo
+```
+
+如果 CMake 找不到 Qt，配置时传入 `-DCMAKE_PREFIX_PATH=<Qt 安装目录>`。在目标麒麟桌面上使用普通用户构建和启动，确认依赖检查通过、状态窗口能显示。
 
 ## 启动与解锁
 
@@ -32,7 +46,7 @@ account required    pam_unix.so
 
 ## 实施与验收
 
-1. 建立 Qt Widgets 和 CMake 工程，在目标机确认 Qt 开发环境、C++ 编译器及 Linux-PAM 开发库。
+1. Qt Widgets 和 CMake 工程已建立。待在目标机确认 Qt 开发环境、C++ 编译器及 Linux-PAM 开发库。
 2. 实现当前用户识别、PAM 调用、解锁窗口和重试限制，随仓库提供独立的 PAM 服务配置样例。
 3. 在目标麒麟测试机上使用本地普通测试账户验证以下场景。
 
