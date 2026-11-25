@@ -2,12 +2,15 @@ cmake_minimum_required(VERSION 3.16)
 
 project(qt-kylin-pam-demo LANGUAGES CXX)
 
-find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets)
-find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets)
+find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets Concurrent)
+find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets Concurrent)
 
-add_executable(qt-kylin-pam-demo src/main.cpp)
+add_executable(qt-kylin-pam-demo src/main.cpp src/authentication.cpp)
 target_compile_features(qt-kylin-pam-demo PRIVATE cxx_std_17)
-target_link_libraries(qt-kylin-pam-demo PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
+target_link_libraries(qt-kylin-pam-demo PRIVATE
+    Qt${QT_VERSION_MAJOR}::Widgets
+    Qt${QT_VERSION_MAJOR}::Concurrent
+)
 
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
     find_path(PAM_INCLUDE_DIR NAMES security/pam_appl.h)
